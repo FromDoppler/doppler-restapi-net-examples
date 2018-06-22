@@ -1,0 +1,11 @@
+c:\users\fgonzalez\documents\visual studio 2017\Projects\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp2.0\Api Request Example.deps.json
+c:\users\fgonzalez\documents\visual studio 2017\Projects\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp2.0\Api Request Example.runtimeconfig.json
+c:\users\fgonzalez\documents\visual studio 2017\Projects\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp2.0\Api Request Example.runtimeconfig.dev.json
+c:\users\fgonzalez\documents\visual studio 2017\Projects\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp2.0\Api Request Example.dll
+c:\users\fgonzalez\documents\visual studio 2017\Projects\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp2.0\Api Request Example.pdb
+c:\users\fgonzalez\documents\visual studio 2017\Projects\ConsoleApp1\ConsoleApp1\obj\Debug\netcoreapp2.0\Api Request Example.csprojAssemblyReference.cache
+c:\users\fgonzalez\documents\visual studio 2017\Projects\ConsoleApp1\ConsoleApp1\obj\Debug\netcoreapp2.0\Api Request Example.csproj.CoreCompileInputs.cache
+c:\users\fgonzalez\documents\visual studio 2017\Projects\ConsoleApp1\ConsoleApp1\obj\Debug\netcoreapp2.0\Api Request Example.AssemblyInfoInputs.cache
+c:\users\fgonzalez\documents\visual studio 2017\Projects\ConsoleApp1\ConsoleApp1\obj\Debug\netcoreapp2.0\Api Request Example.AssemblyInfo.cs
+c:\users\fgonzalez\documents\visual studio 2017\Projects\ConsoleApp1\ConsoleApp1\obj\Debug\netcoreapp2.0\Api Request Example.dll
+c:\users\fgonzalez\documents\visual studio 2017\Projects\ConsoleApp1\ConsoleApp1\obj\Debug\netcoreapp2.0\Api Request Example.pdb
