@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -27,17 +27,17 @@ namespace HttpClientExample
 	}
 	public class ListCampaign
 	{
-		public class Lista
+		public class List
 		{
 			public int id { get; set; }
 		}
 
 		public class RootObject
 		{
-			public List<Lista> lists { get; set; }
+			public List<List> lists { get; set; }
 		}
 	}
-	public class Response
+	public class ApiResponse
 	{
 		public class Link
 		{
@@ -64,10 +64,10 @@ namespace HttpClientExample
 		static HttpClient client = new HttpClient();
 
 
-		static int GetResponse(HttpResponseMessage response)
+		static async Task<int> GetResponse(HttpResponseMessage response)
 		{
-			string ResponseBody = response.Content.ReadAsStringAsync().Result;
-			var Json = JsonConvert.DeserializeObject<Response.RootObject>(ResponseBody);
+			string responseBody = await response.Content.ReadAsStringAsync();
+			var Json = JsonConvert.DeserializeObject<ApiResponse.RootObject>(responseBody);
 			if (response.IsSuccessStatusCode)
 			{
 				Console.WriteLine(response);
@@ -77,65 +77,65 @@ namespace HttpClientExample
 			else
 			{
 				Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
-				Console.WriteLine(ResponseBody);
+				Console.WriteLine(responseBody);
 				return 0;
 			}
 		}
 
-		static async Task<int> CreateList(string AccountName, string ListName)
+		static async Task<int> CreateList(string accountName, string listName)
 		{
 			List content = new List
 			{
-				name = ListName
+				name = listName
 			};
-			HttpResponseMessage response = await client.PostAsJsonAsync("accounts/" + AccountName + "/lists", content);
-			return GetResponse(response);
+			HttpResponseMessage response = await client.PostAsJsonAsync("accounts/" + accountName + "/lists", content);
+			return await GetResponse(response);
 		}
 
-		static async Task SubscriberToList(string AccountName, int ListId, string SubscriberEmail)
+		static async Task SubscriberToList(string accountName, int listId, string subscriberEmail)
 		{
 			Email content = new Email
 			{
-				email = SubscriberEmail
+				email = subscriberEmail
 			};
-			HttpResponseMessage response = await client.PostAsJsonAsync("accounts/" + AccountName + "/lists/" + ListId + "/subscribers", content);
-			GetResponse(response);
+			HttpResponseMessage response = await client.PostAsJsonAsync("accounts/" + accountName + "/lists/" + listId + "/subscribers", content);
+			await GetResponse(response);
 		}
 
-		static async Task<int> CreateCampaign(string AccountName, string Name, string FromName, string FromEmail, string Subject, string PreHeader, string ReplyTo)
+		static async Task<int> CreateCampaign(string accountName, string name, string fromName, string fromEmail, string subject, string preHeader, string replyTo)
 		{
 			Campaign content = new Campaign
 			{
-				name = Name,
-				fromName = FromName,
-				fromEmail = FromEmail,
-				subject = Subject,
-				preheader = PreHeader,
-				replyTo = ReplyTo
+				name = name,
+				fromName = fromName,
+				fromEmail = fromEmail,
+				subject = subject,
+				preheader = preHeader,
+				replyTo = replyTo
 			};
-			HttpResponseMessage response = await client.PostAsJsonAsync("accounts/" + AccountName + "/campaigns", content);
-			return GetResponse(response);
+			HttpResponseMessage response = await client.PostAsJsonAsync("accounts/" + accountName + "/campaigns", content);
+			return await GetResponse(response);
 		}
 
-		static async Task ContentToCampaign(string AccountName, int CampaignId, string HtmlCode, string ApiKey)
+		static async Task ContentToCampaign(string accountName, int campaignId, string htmlCode)
 		{
 			client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/html"));
-			HttpContent content = new StringContent(HtmlCode);
-			HttpResponseMessage response = await client.PutAsync("accounts/" + AccountName + "/campaigns/" + CampaignId + "/content", content);
-			GetResponse(response);
+			HttpContent content = new StringContent(htmlCode);
+			HttpResponseMessage response = await client.PutAsync("accounts/" + accountName + "/campaigns/" + campaignId + "/content", content);
+			await GetResponse(response);
 		}
 
-		static async Task ListToCampaign(string AccountName, int CampaignId, int ListId)
+		static async Task ListToCampaign(string accountName, int campaignId, int listId)
 		{
 			ListCampaign.RootObject content = new ListCampaign.RootObject
 			{
-				lists = new List<ListCampaign.Lista>
+				lists = new List<ListCampaign.List>
 					{
-						new ListCampaign.Lista {id = ListId}
+						new ListCampaign.List {id = listId}
 					}
 			};
-			HttpResponseMessage response = await client.PutAsJsonAsync("accounts/" + AccountName + "/campaigns/" + CampaignId + "/recipients", content);
-			GetResponse(response);
+			HttpResponseMessage response = await client.PutAsJsonAsync("accounts/" + accountName + "/campaigns/" + campaignId + "/recipients", content);
+			await GetResponse(response);
 		}
 
 		static async Task SendCampaign(string AccountName, int CampaignId)
@@ -145,8 +145,8 @@ namespace HttpClientExample
 				type = "immediate"
 			};
 			HttpResponseMessage response = await client.PostAsJsonAsync("accounts/" + AccountName + "/campaigns/" + CampaignId + "/shippings", content);
-			string ResponseBody = response.Content.ReadAsStringAsync().Result;
-			var Json = JsonConvert.DeserializeObject<CampaignToSend>(ResponseBody);
+			string responseBody = response.Content.ReadAsStringAsync().Result;
+			var Json = JsonConvert.DeserializeObject<CampaignToSend>(responseBody);
 			Console.WriteLine(response);
 			Console.WriteLine("Message :" + Json.message);
 		}
@@ -158,26 +158,25 @@ namespace HttpClientExample
 
 		static async Task RunAsync()
 		{
-			string AccountName = "Nombre de la cuenta";
-			string ApiKey = "Api Key";
+			string accountName = "accountEmail@fromdoppler.com";
+			string apiKey = " Api Key";
 
 			client.BaseAddress = new Uri("https://restapi.fromdoppler.com/");
 			client.DefaultRequestHeaders.Accept.Clear();
 			client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", ApiKey);
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", apiKey);
 
-			string ListName = "Lista creada por api";
-			string email = "Email de subscriptor a asociar";
-			string HtmlCode = "Codigo Html del contenido de la campaña";
+			string listName = "My C# list";
+			string email = "subscriberEmail@fromdoppler.com";
+			string htmlCode = "<div> My HTML content </div>";
 
-			int ListId = await CreateList(AccountName, ListName);
-			await SubscriberToList(AccountName, ListId, email);
-			int CampaignId = await CreateCampaign(AccountName, "Nombre de la campaña", "Nombre del remitente", "Email del remitente", "Asunto", "Pre encabezado", "Email de respuesta de la campaña");
-			await ContentToCampaign(AccountName, CampaignId, HtmlCode, ApiKey);
-			await ListToCampaign(AccountName, CampaignId, ListId);
-			await SendCampaign(AccountName, CampaignId);
-
-
+			int listId = await CreateList(accountName, listName);
+			await SubscriberToList(accountName, listId, email);
+			int campaignId = await CreateCampaign(accountName, "My new campaign", "My Name", "myemail@fromdoppler.com", "Subject", "Preheader", "replyToThisEmail@fromdoppler.com");
+			await ContentToCampaign(accountName, campaignId, htmlCode);
+			await ListToCampaign(accountName, campaignId, listId);
+			await SendCampaign(accountName, campaignId);
+			
 			Console.ReadLine();
 		}
 	}
